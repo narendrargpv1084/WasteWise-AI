@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ display_name }} · WasteWise AI{% endblock %}
+{% block content %}
+
+<section class="result-section" aria-label="Classification result">
+  <div class="container result-grid">
+
+    <!-- Image panel -->
+    <figure class="result-image-wrap result-reveal" aria-label="Uploaded image">
+      <img
+        src="{{ image_data }}"
+        alt="Uploaded waste image classified as {{ display_name }}"
+        class="result-img"
+      >
+    </figure>
+
+    <!-- Result panel -->
+    <article class="result-card result-reveal result-reveal--delay" aria-label="Prediction details">
+      <div class="result-card-inner">
+        <p class="eyebrow result-eyebrow">Predicted category</p>
+        <h1 class="result-category">{{ display_name }}</h1>
+
+        <div class="result-divider" aria-hidden="true"></div>
+
+        <div class="guidance-block">
+          <h2 class="guidance-title">{{ guidance.title }}</h2>
+          <p class="guidance-summary">{{ guidance.summary }}</p>
+          <ol class="guidance-list" aria-label="Disposal steps">
+            {% for step in guidance.steps %}
+            <li class="guidance-step">
+              <span class="step-dot" aria-hidden="true"></span>
+              <span>{{ step }}</span>
+            </li>
+            {% endfor %}
+          </ol>
+        </div>
+
+        <p class="fine-print">Always follow your municipality's collection rules. This result is a model prediction from a single image.</p>
+
+        <a class="btn btn-primary btn-classify" href="{{ url_for('index') }}" aria-label="Go back to classify another image">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Classify another image
+        </a>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+{% endblock %}

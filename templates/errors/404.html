@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found · WasteWise AI{% endblock %}
+{% block content %}
+<section class="error-page container panel">
+  <p class="eyebrow">404</p>
+  <h1>That page is not here.</h1>
+  <p>The address may be mistyped, or the page was moved.</p>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Back to classify</a>
+</section>
+{% endblock %}

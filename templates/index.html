@@ -1,0 +1,234 @@
+{% extends "base.html" %}
+{% block title %}Classify waste · WasteWise AI{% endblock %}
+{% block content %}
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO
+════════════════════════════════════════════════════════════════════ -->
+<section class="hero" aria-label="Hero">
+  <!-- Decorative floating shapes -->
+  <div class="hero-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+  </div>
+
+  <div class="container hero-grid">
+    <!-- Copy -->
+    <div class="hero-copy fade-up">
+      <p class="eyebrow">AI-POWERED WASTE CLASSIFICATION</p>
+      <h1 class="hero-headline">Turn waste into<br>the right decision.</h1>
+      <p class="lede">Identify everyday waste with AI and get practical disposal guidance in seconds.</p>
+      <div class="hero-actions">
+        <a href="#classifier" class="btn btn-primary btn-lg scroll-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          Classify Waste
+        </a>
+        <a href="{{ url_for('about') }}" class="btn btn-outline btn-lg">Explore Technology</a>
+      </div>
+    </div>
+
+    <!-- Decorative AI visual -->
+    <div class="hero-visual fade-up fade-up--delay" aria-hidden="true">
+      <div class="ai-core">
+        <div class="ai-ring ai-ring-1"></div>
+        <div class="ai-ring ai-ring-2"></div>
+        <div class="ai-center">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        </div>
+        <div class="ai-node node-1"></div>
+        <div class="ai-node node-2"></div>
+        <div class="ai-node node-3"></div>
+        <div class="ai-node node-4"></div>
+      </div>
+      <p class="ai-label ai-label-top">AI CLASSIFIER</p>
+      <p class="ai-label ai-label-bottom">12 WASTE CLASSES</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     STATS STRIP
+════════════════════════════════════════════════════════════════════ -->
+<section class="stats-strip" aria-label="Model statistics">
+  <div class="container stats-grid">
+    <div class="stat-card">
+      <span class="stat-value">12</span>
+      <span class="stat-label">Waste Categories</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">~95%</span>
+      <span class="stat-label">Validation Accuracy</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">224×224</span>
+      <span class="stat-label">Model Input</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">MobileNetV2</span>
+      <span class="stat-label">Transfer Learning</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     CLASSIFIER
+════════════════════════════════════════════════════════════════════ -->
+<section class="classifier-section" id="classifier" aria-label="Waste classifier">
+  <div class="container classifier-wrap">
+    <div class="section-header">
+      <h2 class="section-title">Classify your waste</h2>
+      <p class="section-sub">Upload an image or use your camera to identify the waste category.</p>
+    </div>
+
+    <form
+      id="classify-form"
+      class="classifier-card"
+      action="{{ url_for('predict') }}"
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+    >
+      {% if error %}
+      <p class="alert" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        {{ error }}
+      </p>
+      {% endif %}
+      <p id="client-error" class="alert hidden" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="client-error-text"></span>
+      </p>
+
+      <div
+        id="drop-zone"
+        class="drop-zone"
+        tabindex="0"
+        role="button"
+        aria-labelledby="drop-label"
+        aria-describedby="drop-hint"
+      >
+        <input
+          id="image-input"
+          class="file-input"
+          type="file"
+          name="image"
+          accept="image/png,image/jpeg,image/jpg,image/webp,.png,.jpg,.jpeg,.webp"
+          aria-label="Choose image file"
+        >
+
+        <div id="preview-wrap" class="preview-wrap hidden">
+          <img id="preview" alt="Selected waste image preview">
+          <div class="preview-overlay">
+            <div id="file-meta" class="file-meta"></div>
+          </div>
+        </div>
+
+        <div id="drop-copy" class="drop-copy">
+          <div class="drop-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <p id="drop-label" class="drop-title">Drop an image here</p>
+          <p id="drop-hint" class="drop-hint">PNG, JPG, or WEBP · max 8 MB</p>
+        </div>
+      </div>
+
+      <div class="camera-block">
+        <video id="camera-preview" class="camera-preview hidden" autoplay playsinline muted aria-label="Camera feed"></video>
+        <canvas id="camera-canvas" class="hidden" width="224" height="224"></canvas>
+      </div>
+
+      <div class="classifier-actions">
+        <div class="actions-group">
+          <button type="button" class="btn btn-secondary" id="choose-btn" aria-label="Choose a file from your device">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            Choose file
+          </button>
+          <button type="button" class="btn btn-secondary" id="camera-btn" aria-label="Use camera to capture image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Use camera
+          </button>
+          <button type="button" class="btn btn-secondary hidden" id="capture-btn" aria-label="Capture photo from camera">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+            Capture
+          </button>
+          <button type="button" class="btn btn-ghost" id="clear-btn" disabled aria-label="Clear selected image">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            Clear
+          </button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-classify" id="predict-btn" disabled aria-label="Classify the selected image">
+          <span class="btn-text">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Classify image
+          </span>
+          <span class="btn-loading hidden" aria-live="polite">
+            <span class="spinner" aria-hidden="true"></span>
+            Classifying…
+          </span>
+        </button>
+      </div>
+      <p id="status" class="status" aria-live="polite" aria-atomic="true"></p>
+    </form>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════════════════════════════ -->
+<section class="how-section" aria-label="How WasteWise AI works">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">How WasteWise AI works</h2>
+    </div>
+    <ol class="steps-grid" role="list">
+      <li class="step-card reveal">
+        <span class="step-number" aria-hidden="true">01</span>
+        <h3 class="step-title">Upload</h3>
+        <p class="step-desc">Upload a photo or capture one using your camera.</p>
+      </li>
+      <li class="step-card reveal reveal--delay1">
+        <span class="step-number" aria-hidden="true">02</span>
+        <h3 class="step-title">Analyze</h3>
+        <p class="step-desc">The trained MobileNetV2 model analyzes the image.</p>
+      </li>
+      <li class="step-card reveal reveal--delay2">
+        <span class="step-number" aria-hidden="true">03</span>
+        <h3 class="step-title">Act</h3>
+        <p class="step-desc">Receive the predicted waste category and practical disposal guidance.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     WASTE CATEGORIES
+════════════════════════════════════════════════════════════════════ -->
+<section class="categories-section" aria-label="Supported waste categories">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">12 supported categories</h2>
+      <p class="section-sub">WasteWise AI recognizes these waste types from the model's training data.</p>
+    </div>
+    <ul class="categories-grid" role="list">
+      <li class="category-chip"><span class="cat-dot cat-battery" aria-hidden="true"></span>Battery</li>
+      <li class="category-chip"><span class="cat-dot cat-biological" aria-hidden="true"></span>Biological</li>
+      <li class="category-chip"><span class="cat-dot cat-glass" aria-hidden="true"></span>Brown Glass</li>
+      <li class="category-chip"><span class="cat-dot cat-cardboard" aria-hidden="true"></span>Cardboard</li>
+      <li class="category-chip"><span class="cat-dot cat-clothes" aria-hidden="true"></span>Clothes</li>
+      <li class="category-chip"><span class="cat-dot cat-glass-green" aria-hidden="true"></span>Green Glass</li>
+      <li class="category-chip"><span class="cat-dot cat-metal" aria-hidden="true"></span>Metal</li>
+      <li class="category-chip"><span class="cat-dot cat-paper" aria-hidden="true"></span>Paper</li>
+      <li class="category-chip"><span class="cat-dot cat-plastic" aria-hidden="true"></span>Plastic</li>
+      <li class="category-chip"><span class="cat-dot cat-shoes" aria-hidden="true"></span>Shoes</li>
+      <li class="category-chip"><span class="cat-dot cat-trash" aria-hidden="true"></span>Trash</li>
+      <li class="category-chip"><span class="cat-dot cat-glass-white" aria-hidden="true"></span>White Glass</li>
+    </ul>
+  </div>
+</section>
+
+{% endblock %}

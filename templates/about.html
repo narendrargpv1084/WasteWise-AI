@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}About · WasteWise AI{% endblock %}
+{% block content %}
+
+<section class="about-hero" aria-label="About WasteWise AI">
+  <div class="container about-hero-inner fade-up">
+    <p class="eyebrow">About the project</p>
+    <h1 class="about-title">WasteWise AI</h1>
+    <p class="lede about-lede">WasteWise AI helps people sort household waste by classifying a photo into one of 12 categories and pairing that category with practical disposal guidance.</p>
+  </div>
+</section>
+
+<div class="about-body container" id="technology">
+
+  <section class="about-section reveal">
+    <div class="about-section-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div class="about-section-body">
+      <h2>Why it exists</h2>
+      <p>Incorrect sorting contaminates recycling streams and sends recoverable material to landfill. A fast image check can reduce guesswork at the bin, especially for look-alike items such as glass colors or mixed packaging.</p>
+    </div>
+  </section>
+
+  <section class="about-section reveal" id="model-architecture">
+    <div class="about-section-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    </div>
+    <div class="about-section-body">
+      <h2>Model architecture</h2>
+      <p>The classifier is a <strong>MobileNetV2</strong> transfer-learning model trained in Google Colab and saved as <code>wastewise_best.keras</code>. MobileNetV2 is a compact convolutional network designed for efficient image classification. This application loads the trained weights for inference only — it does not retrain, fine-tune, or recompile the model.</p>
+
+      <ul class="about-specs">
+        <li>
+          <span class="spec-label">Input</span>
+          <span class="spec-value">RGB image resized to 224×224</span>
+        </li>
+        <li>
+          <span class="spec-label">Output</span>
+          <span class="spec-value">Softmax over 12 waste classes</span>
+        </li>
+        <li>
+          <span class="spec-label">Validation accuracy</span>
+          <span class="spec-value">~95% on 3,103 validation images</span>
+        </li>
+        <li>
+          <span class="spec-label">Preprocessing</span>
+          <span class="spec-value">Rescaling(1./127.5, offset=-1) is inside the Keras graph</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-section reveal">
+    <div class="about-section-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+    </div>
+    <div class="about-section-body">
+      <h2>12 supported categories</h2>
+      <ul class="categories-grid about-categories" role="list">
+        <li class="category-chip"><span class="cat-dot cat-battery" aria-hidden="true"></span>Battery</li>
+        <li class="category-chip"><span class="cat-dot cat-biological" aria-hidden="true"></span>Biological</li>
+        <li class="category-chip"><span class="cat-dot cat-glass" aria-hidden="true"></span>Brown Glass</li>
+        <li class="category-chip"><span class="cat-dot cat-cardboard" aria-hidden="true"></span>Cardboard</li>
+        <li class="category-chip"><span class="cat-dot cat-clothes" aria-hidden="true"></span>Clothes</li>
+        <li class="category-chip"><span class="cat-dot cat-glass-green" aria-hidden="true"></span>Green Glass</li>
+        <li class="category-chip"><span class="cat-dot cat-metal" aria-hidden="true"></span>Metal</li>
+        <li class="category-chip"><span class="cat-dot cat-paper" aria-hidden="true"></span>Paper</li>
+        <li class="category-chip"><span class="cat-dot cat-plastic" aria-hidden="true"></span>Plastic</li>
+        <li class="category-chip"><span class="cat-dot cat-shoes" aria-hidden="true"></span>Shoes</li>
+        <li class="category-chip"><span class="cat-dot cat-trash" aria-hidden="true"></span>Trash</li>
+        <li class="category-chip"><span class="cat-dot cat-glass-white" aria-hidden="true"></span>White Glass</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-section reveal">
+    <div class="about-section-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div class="about-section-body">
+      <h2>Classification workflow</h2>
+      <ol class="workflow-list">
+        <li>You upload a PNG, JPG, or WEBP image, or capture one from the camera.</li>
+        <li>The server checks the file type and size, then stores it with a safe unique name.</li>
+        <li>The image is converted to RGB, resized to 224×224, and batched. No extra pixel normalization is applied.</li>
+        <li>The saved MobileNetV2 model produces a softmax distribution over the 12 labels in <code>class_names.json</code>.</li>
+        <li>The predicted class is shown with disposal guidance. The uploaded file is removed after inference.</li>
+      </ol>
+    </div>
+  </section>
+
+</div>
+
+{% endblock %}

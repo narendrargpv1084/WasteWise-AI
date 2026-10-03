@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}File too large · WasteWise AI{% endblock %}
+{% block content %}
+<section class="error-page container panel">
+  <p class="eyebrow">413</p>
+  <h1>That image is too large.</h1>
+  <p>Please upload a PNG, JPG, or WEBP file no larger than 8 MB.</p>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Choose another image</a>
+</section>
+{% endblock %}
