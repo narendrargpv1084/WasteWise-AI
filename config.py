@@ -17,7 +17,7 @@ def _resolve(path_value, default):
 
 
 MODEL_DIR = BASE_DIR / "model"
-MODEL_PATH = _resolve(os.getenv("MODEL_PATH"), MODEL_DIR / "wastewise_best.keras")
+MODEL_PATH = _resolve(os.getenv("MODEL_PATH"), MODEL_DIR / "wastewise.tflite")
 CLASS_NAMES_PATH = _resolve(os.getenv("CLASS_NAMES_PATH"), MODEL_DIR / "class_names.json")
 MODEL_INFO_PATH = MODEL_DIR / "model_info.json"
 
