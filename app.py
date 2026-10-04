@@ -228,6 +228,10 @@ def create_app():
         except OSError:
             app.logger.warning("Could not delete temporary upload %s", path)
 
+    @app.route("/health")
+    def health():
+        return {"status": "ok", "service": "WasteWise AI"}, 200
+
     @app.route("/")
     def index():
         return render_template("index.html")

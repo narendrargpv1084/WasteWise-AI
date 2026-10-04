@@ -1,13 +1,12 @@
-.env
-.venv/
-venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
-.pytest_cache/
-.mypy_cache/
-.idea/
-.vscode/
+
+.venv/
+venv/
+env/
+
+.env
 
 uploads/*
 !uploads/.gitkeep
@@ -15,5 +14,15 @@ logs/*
 !logs/.gitkeep
 
 *.log
+.pytest_cache/
+.coverage
+.mypy_cache/
+
+.vscode/
+.idea/
+
 .DS_Store
 Thumbs.db
+
+model/uploads/*
+!model/uploads/.gitkeep

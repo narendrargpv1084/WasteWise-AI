@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "app.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{tests/**,logs/**,uploads/**,**/__pycache__/**,**/*.pyc,*.md,training_*.png,confusion_matrix.png,classification_report.txt}"
+    }
+  }
+}
